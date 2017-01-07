@@ -74,7 +74,7 @@ type CP struct {
 	Qty       int     `json:"qty"`
 	Discount  float64 `json:"discount"`
 	Maturity  int     `json:"maturity"`
-	Owners    []Owner `json:"owner"`
+	Owners    []Regulator `json:"regulator"`
 	Issuer    string  `json:"issuer"`
 	IssueDate string  `json:"issueDate"`
 }
@@ -99,20 +99,19 @@ func (t *SimpleChaincode) createVendor(stub shim.ChaincodeStubInterface, vendorn
 	fmt.Println("Creating account")
 
 	// Obtain the username to associate with the account
-	if len(args) != 1 {
-		fmt.Println("Error obtaining username")
-		return nil, errors.New("createAccount accepts a single username argument")
-	}
-	vendorname := vendorname
-	vendortype := vendortype
-	points := points
+//	if len(args) != 1 {
+//		fmt.Println("Error obtaining username")
+//		return nil, errors.New("createAccount accepts a single username argument")
+//	}
+	vendorname = vendorname
+	vendortype = vendortype
+	points = points
 
 	// Build an account object for the user
-	var assetIds []string
 	suffix := "000v"
 	prefix := vendorname + suffix
 
-	var account = Vendor{ID: prefix, Name: vendorname, Type: vendortype, Points: point}
+	var account = Vendor{ID: prefix, Name: vendorname, Type: vendortype, PointsQuantity: points}
 
 	accountBytes, err := json.Marshal(&account)
 	if err != nil {
@@ -186,12 +185,20 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	fmt.Println("Invoke running. Function: " + function)
 
 	if function == "createVendor" {
-		return t.createVendor(stub, args)
+		return t.createVendor(stub, "Tesla", "Electric Car", 20000)
 	}
 
 
 	return nil, errors.New("Received unknown function invocation: " + function)
 }
+
+
+func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	fmt.Println("Query running. Function: " + function)
+
+   return nil, nil
+}
+
 
 func GetVendor(ID string, stub shim.ChaincodeStubInterface) (Account, error) {
 	var company Account
@@ -216,4 +223,67 @@ func main() {
 	if err != nil {
 		fmt.Println("Error starting Simple chaincode: %s", err)
 	}
+}
+
+
+//lookup tables for last two digits of CUSIP
+var seventhDigit = map[int]string{
+	1:  "A",
+	2:  "B",
+	3:  "C",
+	4:  "D",
+	5:  "E",
+	6:  "F",
+	7:  "G",
+	8:  "H",
+	9:  "J",
+	10: "K",
+	11: "L",
+	12: "M",
+	13: "N",
+	14: "P",
+	15: "Q",
+	16: "R",
+	17: "S",
+	18: "T",
+	19: "U",
+	20: "V",
+	21: "W",
+	22: "X",
+	23: "Y",
+	24: "Z",
+}
+
+var eigthDigit = map[int]string{
+	1:  "1",
+	2:  "2",
+	3:  "3",
+	4:  "4",
+	5:  "5",
+	6:  "6",
+	7:  "7",
+	8:  "8",
+	9:  "9",
+	10: "A",
+	11: "B",
+	12: "C",
+	13: "D",
+	14: "E",
+	15: "F",
+	16: "G",
+	17: "H",
+	18: "J",
+	19: "K",
+	20: "L",
+	21: "M",
+	22: "N",
+	23: "P",
+	24: "Q",
+	25: "R",
+	26: "S",
+	27: "T",
+	28: "U",
+	29: "V",
+	30: "W",
+	31: "X",
 }

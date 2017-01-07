@@ -58,7 +58,7 @@ type Vendor struct {
 	ID string           `json:"id"`
 	Name string	        `json:"vendorname"`
 	Type string         `json:"vendortype"`
-	PointsQuantity int  `json:"vptquantity"`
+	PointsQuantity string  `json:"vptquantity"`
 }
 
 type Customer struct {
@@ -95,7 +95,7 @@ type Transaction struct {
 }
 
 
-func (t *SimpleChaincode) createVendor(stub shim.ChaincodeStubInterface, vendorname string, vendortype string, points int) ([]byte, error) {
+func (t *SimpleChaincode) createVendor(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	fmt.Println("Creating account")
 
 	// Obtain the username to associate with the account
@@ -103,9 +103,9 @@ func (t *SimpleChaincode) createVendor(stub shim.ChaincodeStubInterface, vendorn
 //		fmt.Println("Error obtaining username")
 //		return nil, errors.New("createAccount accepts a single username argument")
 //	}
-	vendorname = vendorname
-	vendortype = vendortype
-	points = points
+	vendorname := args[0]
+	vendortype := args[1]
+	points := args[2]
 
 	// Build an account object for the user
 	suffix := "000v"
@@ -185,7 +185,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	fmt.Println("Invoke running. Function: " + function)
 
 	if function == "createVendor" {
-		return t.createVendor(stub, "Tesla", "Electric Car", 20000)
+		return t.createVendor(stub, args)
 	}
 
 

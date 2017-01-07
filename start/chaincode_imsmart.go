@@ -196,25 +196,30 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("Query running. Function: " + function)
 
+
+	if function == "GetVendor" {
+ 	 return t.GetVendor(stub, args)
+  }
    return nil, nil
 }
 
 
-func GetVendor(ID string, stub shim.ChaincodeStubInterface) (Account, error) {
+func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var company Account
+  ID := args[0]
 	companyBytes, err := stub.GetState(ID + "000v")
 	if err != nil {
 		fmt.Println("Account not found " + ID)
-		return company, errors.New("Account not found " + ID)
+		//return company, errors.New("Account not found " + ID)
 	}
 
 	err = json.Unmarshal(companyBytes, &company)
 	if err != nil {
 		fmt.Println("Error unmarshalling account " + ID + "\n err:" + err.Error())
-		return company, errors.New("Error unmarshalling account " + ID)
+		//return company, errors.New("Error unmarshalling account " + ID)
 	}
 
-	return company, nil
+	return nil, nil
 }
 
 

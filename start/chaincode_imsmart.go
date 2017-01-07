@@ -202,7 +202,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 func GetVendor(ID string, stub shim.ChaincodeStubInterface) (Account, error) {
 	var company Account
-	companyBytes, err := stub.GetState(accountPrefix + ID)
+	companyBytes, err := stub.GetState("000v" + ID)
 	if err != nil {
 		fmt.Println("Account not found " + ID)
 		return company, errors.New("Account not found " + ID)

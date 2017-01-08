@@ -55,9 +55,9 @@ type Regulator struct {
 }
 
 type Vendor struct {
-	ID string           `json:"id"`
-	Name string	        `json:"vendorname"`
-	Type string         `json:"vendortype"`
+	ID string              `json:"id"`
+	Name string	           `json:"vendorname"`
+	Type string            `json:"vendortype"`
 	PointsQuantity string  `json:"vptquantity"`
 }
 
@@ -200,7 +200,22 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 	if function == "GetVendor" {
  	 return t.GetVendor(stub, args)
-  }
+  } else if function == "GetVendors" {
+		fmt.Println("Getting all CPs")
+		allCPs, err := GetVendors(stub)
+		if err != nil {
+			fmt.Println("Error from getallcps")
+			return nil, err
+		} else {
+			allCPsBytes, err1 := json.Marshal(&allCPs)
+			if err1 != nil {
+				fmt.Println("Error marshalling allcps")
+				return nil, err1
+			}
+			fmt.Println("All success, returning allcps")
+			return allCPsBytes, nil
+		}
+	}
    return nil, nil
 }
 
@@ -222,6 +237,42 @@ func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []str
 	}
 
 	return companyBytes, nil
+}
+
+
+func GetVendors(stub shim.ChaincodeStubInterface) ([]Vendor, error) {
+
+	var allVs []Vendor
+
+	// Get list of all the keys
+	keysBytes, err := stub.GetState("SmartKeys")
+	if err != nil {
+		fmt.Println("Error retrieving smart keys")
+		return nil, errors.New("Error retrieving smart keys")
+	}
+	var keys []string
+	err = json.Unmarshal(keysBytes, &keys)
+	if err != nil {
+		fmt.Println("Error unmarshalling smart keys")
+		return nil, errors.New("Error unmarshalling smart keys")
+	}
+
+	// Get all the cps
+	for _, value := range keys {
+		cpBytes, err := stub.GetState(value)
+
+		var cp Vendor
+		err = json.Unmarshal(cpBytes, &cp)
+		if err != nil {
+			fmt.Println("Error retrieving cp " + value)
+			return nil, errors.New("Error retrieving cp " + value)
+		}
+
+		fmt.Println("Appending CP" + value)
+		allVs = append(allVs, cp)
+	}
+
+	return allVs, nil
 }
 
 

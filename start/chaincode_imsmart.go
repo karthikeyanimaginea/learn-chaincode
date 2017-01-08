@@ -205,7 +205,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 
 func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var vendordet Vendor
+//	var vendordet Vendor
   ID := args[0]
 	//suffix := "000v"
 	companyBytes, err := stub.GetState(ID)
@@ -214,14 +214,14 @@ func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []str
 		return nil, errors.New("Account not found " + ID)
 	}
 
-	err = json.Unmarshal(companyBytes, &vendordet)
-	if err != nil {
-		fmt.Println("Error unmarshalling account " + ID + "\n err:" + err.Error())
-		return nil, errors.New("Error unmarshalling account " + ID)
-	}
+//	err = json.Unmarshal(companyBytes, &vendordet)
+//	if err != nil {
+//		fmt.Println("Error unmarshalling account " + ID + "\n err:" + err.Error())
+//		return nil, errors.New("Error unmarshalling account " + ID)
+//	}
 
   fmt.Println("test")
-	return companyBytes, nil
+	return companyBytes, err
 }
 
 

@@ -202,12 +202,12 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
  	 return t.GetVendor(stub, args)
   } else if function == "GetVendors" {
 		fmt.Println("Getting all CPs")
-		allCPs, err := GetVendors(stub)
+		allVs, err := GetVendors(stub)
 		if err != nil {
 			fmt.Println("Error from getallcps")
 			return nil, err
 		} else {
-			allCPsBytes, err1 := json.Marshal(&allCPs)
+			allCPsBytes, err1 := json.Marshal(&allVs)
 			if err1 != nil {
 				fmt.Println("Error marshalling allcps")
 				return nil, err1

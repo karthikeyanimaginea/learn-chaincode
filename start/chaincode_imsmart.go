@@ -103,15 +103,16 @@ func (t *SimpleChaincode) createVendor(stub shim.ChaincodeStubInterface, args []
 //		fmt.Println("Error obtaining username")
 //		return nil, errors.New("createAccount accepts a single username argument")
 //	}
-	vendorname := args[0]
-	vendortype := args[1]
-	points := args[2]
+  vendorID := args[0]
+	vendorname := args[1]
+	vendortype := args[2]
+	points := args[3]
 
 	// Build an account object for the user
-	suffix := "000v"
-	prefix := vendorname + suffix
+//	suffix := "000v"
+//	prefix := vendorname + suffix
 
-	var account = Vendor{ID: prefix, Name: vendorname, Type: vendortype, PointsQuantity: points}
+	var account = Vendor{ID: vendorID, Name: vendorname, Type: vendortype, PointsQuantity: points}
 
 	accountBytes, err := json.Marshal(&account)
 	if err != nil {
@@ -205,7 +206,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 
 func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-//	var vendordet Vendor
+	var vendordet Vendor
   ID := args[0]
 	//suffix := "000v"
 	companyBytes, err := stub.GetState(ID)
@@ -214,14 +215,13 @@ func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []str
 		return nil, errors.New("Account not found " + ID)
 	}
 
-//	err = json.Unmarshal(companyBytes, &vendordet)
-//	if err != nil {
-//		fmt.Println("Error unmarshalling account " + ID + "\n err:" + err.Error())
-//		return nil, errors.New("Error unmarshalling account " + ID)
-//	}
+	err = json.Unmarshal(companyBytes, &vendordet)
+	if err != nil {
+		fmt.Println("Error unmarshalling account " + ID + "\n err:" + err.Error())
+		return nil, errors.New("Error unmarshalling account " + ID)
+	}
 
-  fmt.Println("test")
-	return companyBytes, err
+	return companyBytes, nil
 }
 
 

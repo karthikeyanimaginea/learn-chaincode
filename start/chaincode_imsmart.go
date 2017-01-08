@@ -207,13 +207,13 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			fmt.Println("Error from getallcps")
 			return nil, err
 		} else {
-			allCPsBytes, err1 := json.Marshal(&allVs)
+			allVsBytes, err1 := json.Marshal(&allVs)
 			if err1 != nil {
-				fmt.Println("Error marshalling allcps")
+				fmt.Println("Error marshalling allVs")
 				return nil, err1
 			}
-			fmt.Println("All success, returning allcps")
-			return allCPsBytes, nil
+			fmt.Println("All success, returning allVs")
+			return allVsBytes, nil
 		}
 	}
    return nil, nil
@@ -259,17 +259,17 @@ func GetVendors(stub shim.ChaincodeStubInterface) ([]Vendor, error) {
 
 	// Get all the cps
 	for _, value := range keys {
-		cpBytes, err := stub.GetState(value)
+		vBytes, err := stub.GetState(value)
 
-		var cp Vendor
-		err = json.Unmarshal(cpBytes, &cp)
+		var vp Vendor
+		err = json.Unmarshal(vBytes, &vp)
 		if err != nil {
-			fmt.Println("Error retrieving cp " + value)
-			return nil, errors.New("Error retrieving cp " + value)
+			fmt.Println("Error retrieving vp " + value)
+			return nil, errors.New("Error retrieving vp " + value)
 		}
 
-		fmt.Println("Appending CP" + value)
-		allVs = append(allVs, cp)
+		fmt.Println("Appending VP" + value)
+		allVs = append(allVs, vp)
 	}
 
 	return allVs, nil

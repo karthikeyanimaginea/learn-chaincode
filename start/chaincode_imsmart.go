@@ -219,6 +219,7 @@ func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []str
 		return nil, errors.New("Error unmarshalling account " + ID)
 	}
 
+  fmt.Println("test")
 	return companyBytes, nil
 }
 

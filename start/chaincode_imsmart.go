@@ -205,15 +205,16 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 
 func (t *SimpleChaincode) GetVendor(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var company Account
+	var vendordet Vendor
   ID := args[0]
-	companyBytes, err := stub.GetState("Tesla000v")
+	//suffix := "000v"
+	companyBytes, err := stub.GetState(ID)
 	if err != nil {
 		fmt.Println("Account not found " + ID)
 		return nil, errors.New("Account not found " + ID)
 	}
 
-	err = json.Unmarshal(companyBytes, &company)
+	err = json.Unmarshal(companyBytes, &vendordet)
 	if err != nil {
 		fmt.Println("Error unmarshalling account " + ID + "\n err:" + err.Error())
 		return nil, errors.New("Error unmarshalling account " + ID)
